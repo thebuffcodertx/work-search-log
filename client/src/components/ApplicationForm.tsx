@@ -1,54 +1,108 @@
-import "./ApplicationForm.css"
-import { useState } from "react"
-import type { JobApplication } from "../types/application"
+import "./ApplicationForm.css";
+import { useState } from "react";
+import type { JobApplication } from "../types/application";
 
-function ApplicationForm() {
-  const [companyName, setCompanyName] = useState("")
-  const [jobTitle, setJobTitle] = useState("")
-  const [jobUrl, setJobUrl] = useState("")
-  const [workType, setWorkType] = useState("Remote")
-  const [location, setLocation] = useState("")
-  const [dateApplied, setDateApplied] = useState("")
-  const [contactName, setContactName] = useState("")
-  const [contactEmail, setContactEmail] = useState("")
-  const [status, setStatus] = useState("Interested")
-  const [notes, setNotes] = useState("")
+// function ApplicationForm() {
+function ApplicationForm({ onAdd }: { onAdd: (app: JobApplication) => void }) {
+  const [companyName, setCompanyName] = useState("");
+  const [jobTitle, setJobTitle] = useState("");
+  const [jobUrl, setJobUrl] = useState("");
+  const [workType, setWorkType] = useState("Remote");
+  const [location, setLocation] = useState("");
+  const [dateApplied, setDateApplied] = useState("");
+  const [contactName, setContactName] = useState("");
+  const [contactEmail, setContactEmail] = useState("");
+  const [status, setStatus] = useState("Interested");
+  const [notes, setNotes] = useState("");
+  const [showSuccess, setShowSuccess] = useState(false);
 
-  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-  e.preventDefault()
+  //   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+  //   e.preventDefault()
 
-  const newApplication: JobApplication = {
-    id: Date.now(),
-    companyName,
-    jobTitle,
-    jobUrl,
-    dateApplied,
-    status,
-    location,
-    workType,
-    contactName,
-    contactEmail,
-    notes,
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString()
+  //   const newApplication: JobApplication = {
+  //     id: Date.now(),
+  //     companyName,
+  //     jobTitle,
+  //     jobUrl,
+  //     dateApplied,
+  //     status,
+  //     location,
+  //     workType,
+  //     contactName,
+  //     contactEmail,
+  //     notes,
+  //     createdAt: new Date().toISOString(),
+  //     updatedAt: new Date().toISOString()
+  //   }
+
+  //   const savedApplications = localStorage.getItem("applications")
+
+  //   const applications = savedApplications
+  //     ? JSON.parse(savedApplications)
+  //     : []
+
+  //   applications.push(newApplication)
+
+  //   localStorage.setItem(
+  //     "applications",
+  //     JSON.stringify(applications)
+  //   )
+  // }
+
+  function resetForm() {
+    setCompanyName("");
+    setJobTitle("");
+    setJobUrl("");
+    setWorkType("Remote");
+    setLocation("");
+    setDateApplied("");
+    setContactName("");
+    setContactEmail("");
+    setStatus("Interested");
+    setNotes("");
   }
 
-  const savedApplications = localStorage.getItem("applications")
+  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
 
-  const applications = savedApplications
-    ? JSON.parse(savedApplications)
-    : []
+    const newApplication: JobApplication = {
+      id: Date.now(),
+      companyName,
+      jobTitle,
+      jobUrl,
+      dateApplied,
+      status,
+      location,
+      workType,
+      contactName,
+      contactEmail,
+      notes,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    };
 
-  applications.push(newApplication)
-
-  localStorage.setItem(
-    "applications",
-    JSON.stringify(applications)
-  )
-}
+    fetch("http://localhost:3001/api/applications", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(newApplication),
+    })
+      .then((res) => res.json())
+      // .then((saved) => console.log("Saved:", saved))
+      .then((saved) => {
+        onAdd(saved);
+        resetForm();
+        setShowSuccess(true);
+        setTimeout(() => setShowSuccess(false), 3000);
+      });
+  }
 
   return (
     <form className="application-form" onSubmit={handleSubmit}>
+      {showSuccess && (
+  <div className="fixed bottom-4 right-4 rounded-lg bg-green-600 px-4 py-3 text-white shadow-lg">
+    Application submitted!
+  </div>
+)}
       <div className="form-group">
         <label htmlFor="companyName">Company Name</label>
         <input
@@ -171,7 +225,7 @@ function ApplicationForm() {
 
       <button type="submit">Add Application</button>
     </form>
-  )
+  );
 }
 
-export default ApplicationForm
+export default ApplicationForm;
