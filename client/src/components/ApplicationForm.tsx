@@ -1,18 +1,18 @@
 import "./ApplicationForm.css";
 import { useState } from "react";
-import type { JobApplication } from "../types/application";
+import type { ApplicationStatus, JobApplication, WorkType } from "../types/applications";
 
 // function ApplicationForm() {
 function ApplicationForm({ onAdd }: { onAdd: (app: JobApplication) => void }) {
   const [companyName, setCompanyName] = useState("");
   const [jobTitle, setJobTitle] = useState("");
   const [jobUrl, setJobUrl] = useState("");
-  const [workType, setWorkType] = useState("Remote");
+  const [workType, setWorkType] = useState<WorkType>("Remote");
   const [location, setLocation] = useState("");
   const [dateApplied, setDateApplied] = useState("");
   const [contactName, setContactName] = useState("");
   const [contactEmail, setContactEmail] = useState("");
-  const [status, setStatus] = useState("Interested");
+  const [status, setStatus] = useState<ApplicationStatus>("Interested");
   const [notes, setNotes] = useState("");
   const [showSuccess, setShowSuccess] = useState(false);
 
@@ -142,7 +142,7 @@ function ApplicationForm({ onAdd }: { onAdd: (app: JobApplication) => void }) {
           id="workType"
           name="workType"
           value={workType}
-          onChange={(e) => setWorkType(e.target.value)}
+          onChange={(e) => setWorkType(e.target.value as WorkType)}
         >
           <option value="Remote">Remote</option>
           <option value="Hybrid">Hybrid</option>
@@ -200,7 +200,7 @@ function ApplicationForm({ onAdd }: { onAdd: (app: JobApplication) => void }) {
           id="status"
           name="status"
           value={status}
-          onChange={(e) => setStatus(e.target.value)}
+          onChange={(e) => setStatus(e.target.value as ApplicationStatus)}
         >
           <option value="Interested">Interested</option>
           <option value="Applied">Applied</option>
