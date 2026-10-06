@@ -1,5 +1,6 @@
 import express from "express"
 import cors from "cors"
+import pool from "./config/db.js"
 
 const app = express()
 app.use(cors())
@@ -53,6 +54,13 @@ app.post("/api/applications", (req, res) => {
   applications.push(newApplication)
   res.status(201).json(newApplication)
 })
+
+try {
+  await pool.query("SELECT 1")
+  console.log("Connected to MySQL")
+} catch (err) {
+  console.error("MySQL connection failed:", err.message)
+}
 
 
 app.listen(3001, () => console.log("Server running on http://localhost:3001"))
