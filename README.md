@@ -42,6 +42,10 @@ The frontend will send HTTP requests to an Express API. The API will handle the 
 
 ## Data model
 
+![ERD](docs/erd.png)
+
+[View the full schema (DBML)](docs/schema.dbml)
+
 Defined in [`client/src/types/applications.ts`](client/src/types/applications.ts):
 
 ```ts

@@ -1,0 +1,69 @@
+Enum activity_type {
+  "Application"
+  "Interview Prep"
+  "Job Fair"
+  "Networking"
+  "Workshop/Training"
+  "Other"
+}
+
+Enum platform {
+  "LinkedIn"
+  "Indeed"
+  "ZipRecruiter"
+  "Company Website"
+  "Referral"
+  "Job Fair"
+  "Other"
+}
+
+Enum work_type {
+  "Remote"
+  "Hybrid"
+  "On-site"
+}
+
+Enum status {
+  "Interested"
+  "Applied"
+  "Screening"
+  "Interview"
+  "Offer"
+  "Rejected"
+  "Withdrawn"
+}
+
+Table users {
+  id int [pk, increment]
+  first_name varchar(50) [not null]
+  last_name varchar(50) [not null]
+  email varchar(255) [not null, unique]
+  password_hash varchar(255) [not null]
+  created_at timestamp [default: `now()`]
+  updated_at timestamp
+}
+
+Table work_searches {
+  id int [pk, increment]
+  user_id int [not null, ref: > users.id]
+  activity_type activity_type [not null, default: 'Application']
+  activity_date date [not null]
+  company_name varchar(150)
+  job_title varchar(150)
+  job_url varchar(500)
+  platform platform
+  work_type work_type
+  location varchar(150)
+  contact_name varchar(100)
+  contact_email varchar(255)
+  status status
+  notes text
+  created_at timestamp [default: `now()`]
+  updated_at timestamp
+
+  indexes {
+    (user_id, activity_date)
+    (user_id, status)
+    (user_id, job_title)
+  }
+}
