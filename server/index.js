@@ -1,10 +1,14 @@
 import express from "express"
 import cors from "cors"
 import pool from "./config/db.js"
+import workSearchRoutes from "./routes/workSearchRoutes.js"
+import userRoutes from "./routes/userRoutes.js"
 
 const app = express()
 app.use(cors())
 app.use(express.json())
+app.use("/api/work-searches", workSearchRoutes)
+app.use("/api/users", userRoutes)
 
 // app.get("/api/applications", (req, res) => {
 //   res.json([{
